@@ -7,4 +7,4 @@ SELECT  TO_HEX(SHA256(Concat(cast(FullvisitorID as string),"_",cast(VISITID as s
         VISITID as VISIT_ID,
         trafficsource.AdwordsClickInfo.TARGETINGCriteria.boomUserlistID as TARGETING_CRITERIA_BOOM_USERLIST_ID
 FROM `ts-official-website.118166279.ga_sessions_*`
-WHERE _TABLE_SUFFIX BETWEEN '20180114' and '20180114'
+WHERE _TABLE_SUFFIX BETWEEN '{start_date}' and '{end_date}'

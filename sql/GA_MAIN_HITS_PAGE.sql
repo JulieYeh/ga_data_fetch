@@ -17,4 +17,4 @@
         hits.page.searchcategory as SEARCH_CATEGORY
 FROM `ts-official-website.118166279.ga_sessions_*`,
         UNNEST(hits) as hits     
-WHERE _TABLE_SUFFIX BETWEEN '20180114' and '20180114'
+WHERE _TABLE_SUFFIX BETWEEN '{start_date}' and '{end_date}'

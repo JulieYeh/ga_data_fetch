@@ -17,4 +17,4 @@
         GEONETWORK.networklocation as NETWORK_LOCATION
 FROM `ts-official-website.118166279.ga_sessions_*`,
         UNNEST(customdimensions) as customdimensions
-WHERE _TABLE_SUFFIX BETWEEN '20180114' and '20180114'
+WHERE _TABLE_SUFFIX BETWEEN '{start_date}' and '{end_date}'

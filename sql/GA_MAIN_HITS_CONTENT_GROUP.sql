@@ -22,4 +22,4 @@ SELECT TO_HEX(SHA256(Concat(cast(FullvisitorID as string),'_',cast(VISITID as st
 	   h.contentGroup.contentGroupUniqueViews5 as UNIQUE_VIEWS_5
 FROM `ts-official-website.164284491.ga_sessions_*`,
 	   UNNEST(hits) as h
-WHERE _TABLE_SUFFIX BETWEEN '20180327' and '20180327'
+WHERE _TABLE_SUFFIX BETWEEN '{start_date}' and '{end_date}'
