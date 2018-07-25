@@ -14,6 +14,6 @@ SELECT  TO_HEX(SHA256(Concat(cast(FullvisitorID as string),"_",cast(VISITID as s
         hits.social.socialinteractionTARGET as SOCIAL_INTERACTION_TARGET,
         hits.social.socialnetwork as SOCIAL_NETWORK,
         hits.social.uniquesocialinteractions as UNIQUE_SOCIAL_INTERACTIONS
-FROM `ts-official-website.118166279.ga_sessions_*`,
+FROM `ts-official-website.{resourceid}.ga_sessions_*`,
         UNNEST(hits) as hits
 WHERE _TABLE_SUFFIX BETWEEN '{start_date}' and '{end_date}'

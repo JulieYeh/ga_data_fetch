@@ -16,5 +16,5 @@ SELECT  TO_HEX(SHA256(Concat(cast(FullvisitorID as string),"_",cast(VISITID as s
         trafficsource.AdwordsClickInfo.ISVIDEOAD AS IS_VIDEO_AD,
          trafficsource.AdwordsClickInfo.PAGE AS PAGE,
         trafficsource.AdwordsClickInfo.SLOT AS SLOT
-FROM `ts-official-website.118166279.ga_sessions_*`
+FROM `ts-official-website.{resourceid}.ga_sessions_*`
 WHERE _TABLE_SUFFIX BETWEEN '{start_date}' and '{end_date}'

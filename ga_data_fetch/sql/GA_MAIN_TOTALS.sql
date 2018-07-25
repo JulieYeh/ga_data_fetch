@@ -15,5 +15,5 @@
         totals.totaltransactionrevenue as TOTAL_TRANSACTION_REVENUE,
         totals.transactions as TRANSACTIONS,
         totals.visits as VISITS
-    FROM `ts-official-website.118166279.ga_sessions_*`
+    FROM `ts-official-website.{resourceid}.ga_sessions_*`
     WHERE _TABLE_SUFFIX BETWEEN '{start_date}' and '{end_date}'

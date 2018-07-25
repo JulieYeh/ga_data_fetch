@@ -7,6 +7,6 @@ SELECT  TO_HEX(SHA256(Concat(cast(FullvisitorID as string),"_",cast(VISITID as s
         VISITID as VISIT_ID,
         customdimensions.index as INDEX,
         customdimensions.value as VALUE
-FROM `ts-official-website.118166279.ga_sessions_*`,
+FROM `ts-official-website.{resourceid}.ga_sessions_*`,
         UNNEST(customdimensions) as customdimensions
 WHERE _TABLE_SUFFIX BETWEEN '{start_date}' and '{end_date}'

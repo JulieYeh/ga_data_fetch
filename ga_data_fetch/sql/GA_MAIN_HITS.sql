@@ -14,6 +14,6 @@ SELECT  TO_HEX(SHA256(Concat(cast(FullvisitorID as string),"_",cast(VISITID as s
         HITS.TIME as TIME,
         HITS.REFerer as REFERER,
         hits.type as TYPE
-FROM `ts-official-website.118166279.ga_sessions_*`,
+FROM `ts-official-website.{resourceid}.ga_sessions_*`,
         UNNEST(hits) as hits
 WHERE _TABLE_SUFFIX BETWEEN '{start_date}' and '{end_date}'
