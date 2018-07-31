@@ -5,7 +5,6 @@ is_local = os.path.split(os.getcwd())[-1] == 'bin'
 if is_local:
     print('!!!! local execution !!!!')
     from context import ga_data_fetch
-    os.chdir('..')
 
 from configparser import ConfigParser
 from datetime import datetime, timedelta
@@ -76,6 +75,6 @@ def main(argv: List[str]) -> int:
 
 if __name__ == '__main__':
     if is_local:
-        sys.exit(main([__file__, './config.ini', '-s', '20180730', '-e', '20180730']))
+        sys.exit(main([__file__, '../config.ini', '-s', '20180730', '-e', '20180730']))
     else:
         sys.exit(main(sys.argv))
