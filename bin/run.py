@@ -49,7 +49,7 @@ def main(argv: List[str]) -> int:
     ga = GA(projectid=PROJECTID, sql_path=SQL_PATH, private_key=PRIVATE_KEY)
 
     # print(ga._sql_list)
-    ga.save_bq_csv('website', OUTPUT_PATH, start_date, end_date)
+    ga.save_bq_csv(OUTPUT_PATH, start_date, end_date, 'all')
 
     print('-------------------------------------------'
           f'\nDone. (Time elapsed: {datetime.now() - tic})')
@@ -59,6 +59,6 @@ def main(argv: List[str]) -> int:
 
 if __name__ == '__main__':
     if is_local:
-        sys.exit(main([__file__, '../config.ini', '-s', '20180314', '-e', '20180314']))
+        sys.exit(main([__file__, '../config.ini', '-s', '20180601', '-e', '20180630']))
     else:
         sys.exit(main(sys.argv))
