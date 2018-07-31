@@ -1,11 +1,21 @@
-import pandas as pd
-from pandas_gbq import read_gbq
-# import logging
-from datetime import datetime, timedelta
-import numpy as np
-from pathlib import Path
-import os
+__version__ = '0.0.1'
+
 from .resources import resourceid
+from datetime import datetime, timedelta
+from pandas_gbq import read_gbq
+from pathlib import Path
+import logging
+import numpy as np
+import os
+import pandas as pd
+import sys
+
+log_console = logging.StreamHandler(sys.stderr)
+log_formatter = logging.Formatter('[%(asctime)s] [%(levelname)s] %(message)s')
+log_console.setFormatter(log_formatter)
+default_logger = logging.getLogger(__name__)
+default_logger.setLevel(logging.DEBUG)
+default_logger.addHandler(log_console)
 
 
 class GA:
@@ -27,8 +37,8 @@ class GA:
             self.initiate(self._sql_path)
 
     def initiate(self, sql_path):
-        print('Initiale GA...')
-        print(f'Load SQL from "{sql_path}"')
+        default_logger.info('Initiale GA...')
+        default_logger.info(f"Load SQL from '{sql_path}'")
         self._sql_list = self._load_sql(sql_path)
         self._initiated = True
 
@@ -56,28 +66,29 @@ class GA:
             resource_name_list = [resource_name]
 
         output = Path(output_path).absolute()
+
         if not output.is_dir():
             raise ValueError(f'`output` must be a folder path ({output})')
 
-        print("Get data for following settings:")
-        print(f'Resources: {resource_name_list}')
-        print(f'Dates: {list(self._dates_between(start_date, end_date))}')
+        default_logger.info("Get data for following settings:")
+        default_logger.info(f'Resources: {resource_name_list}')
+        default_logger.info(f'Dates: {list(self._dates_between(start_date, end_date))}')
 
         res = {}
         for data_date in self._dates_between(start_date, end_date):
-            for table, sql in self._sql_list.items():
-                for resource in resource_name_list:
+            for resource in resource_name_list:
+                for table, sql in self._sql_list.items():
                     out_file = f'{data_date}-{resource}-{table}.csv'
                     out_path = output / out_file
 
-                    print(f"Saving file : '{str(out_path)}'")
+                    default_logger.info(f"Saving file: '{str(out_path)}'")
                     
                     res[out_file] = self.save_bq_csv_oneday(
                         sql, resource, data_date, output=str(out_path))
 
         res = pd.DataFrame.from_dict(
             {'key': list(res.keys()), 'val': list(res.values())})
-        print(res)
+        default_logger.info(res)
 
     def save_bq_csv_oneday(self, sql, resource_name, data_date, output, dialect='standard'):
 
@@ -94,7 +105,7 @@ class GA:
             df.to_csv(output, index=False)
             return df.shape[0]
         except Exception as e:
-            print(e)
+            default_logger.info(e)
             return np.NaN
 
     def _dates_between(self, start_date, end_date):

@@ -5,11 +5,14 @@ is_local = os.path.split(os.getcwd())[-1] == 'bin'
 if is_local:
     from context import ga_data_fetch
 
+from configparser import ConfigParser
+from datetime import datetime, timedelta
 from ga_data_fetch import GA
+from ga_data_fetch import log_formatter
 from typing import List
 import argparse
-from datetime import datetime, timedelta
-from configparser import ConfigParser
+import logging
+from logging.handlers import TimedRotatingFileHandler
 
 
 def parse_args(argv: List[str]) -> argparse.Namespace:
@@ -29,6 +32,8 @@ def main(argv: List[str]) -> int:
     
     # Arg parser
     args = parse_args(argv)
+
+    # Config
     if args.config:
         config = ConfigParser()
         config.read(args.config)
@@ -38,18 +43,25 @@ def main(argv: List[str]) -> int:
         PROJECTID = config_now['projectid']
         OUTPUT_PATH = config_now['output_path']
         PRIVATE_KEY = config_now['private_key']
+        LOG_FILE = config_now['log_file']
     else:
         raise ValueError('Config file required.')
     
-    start_date = args.start_date  # '20180101'
-    end_date = args.end_date  # '20180101'
+    START_DATE = args.start_date  # '20180101'
+    END_DATE = args.end_date  # '20180101'
     
+    # Logging
+    log_file = TimedRotatingFileHandler(
+        LOG_FILE, when='D', interval=1, backupCount=30)
+    log_file.setFormatter(log_formatter)
+    logging.getLogger('ga_data_fetch').addHandler(log_file)
+
     # Run
     tic = datetime.now()
     ga = GA(projectid=PROJECTID, sql_path=SQL_PATH, private_key=PRIVATE_KEY)
 
     # print(ga._sql_list)
-    ga.save_bq_csv(OUTPUT_PATH, start_date, end_date, 'all')
+    ga.save_bq_csv(OUTPUT_PATH, START_DATE, END_DATE, 'all')
 
     print('-------------------------------------------'
           f'\nDone. (Time elapsed: {datetime.now() - tic})')
@@ -59,6 +71,6 @@ def main(argv: List[str]) -> int:
 
 if __name__ == '__main__':
     if is_local:
-        sys.exit(main([__file__, '../config.ini', '-s', '20180601', '-e', '20180630']))
+        sys.exit(main([__file__, '../config.ini', '-s', '20180730', '-e', '20180730']))
     else:
         sys.exit(main(sys.argv))
