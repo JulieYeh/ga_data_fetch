@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
 pipenv install
-cd ./bin
-pipenv run python -u run.py ../config.ini
+pipenv run python -mu bin.run config.ini
 

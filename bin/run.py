@@ -3,7 +3,9 @@ import sys
 is_local = os.path.split(os.getcwd())[-1] == 'bin'
 
 if is_local:
+    print('!!!! local execution !!!!')
     from context import ga_data_fetch
+    os.chdir('..')
 
 from configparser import ConfigParser
 from datetime import datetime, timedelta
@@ -13,6 +15,7 @@ from typing import List
 import argparse
 import logging
 from logging.handlers import TimedRotatingFileHandler
+from pathlib import Path
 
 
 def parse_args(argv: List[str]) -> argparse.Namespace:
@@ -44,6 +47,8 @@ def main(argv: List[str]) -> int:
         OUTPUT_PATH = config_now['output_path']
         PRIVATE_KEY = config_now['private_key']
         LOG_FILE = config_now['log_file']
+    elif not Path(args.config).is_file():
+        raise ValueError(f'{args.config} not found for config file.')
     else:
         raise ValueError('Config file required.')
     
@@ -71,6 +76,6 @@ def main(argv: List[str]) -> int:
 
 if __name__ == '__main__':
     if is_local:
-        sys.exit(main([__file__, '../config.ini', '-s', '20180730', '-e', '20180730']))
+        sys.exit(main([__file__, './config.ini', '-s', '20180730', '-e', '20180730']))
     else:
         sys.exit(main(sys.argv))

@@ -90,19 +90,25 @@ class GA:
             {'key': list(res.keys()), 'val': list(res.values())})
         default_logger.info(res)
 
-    def save_bq_csv_oneday(self, sql, resource_name, data_date, output, dialect='standard'):
+    def save_bq_csv_oneday(self, sql_template, resource_name, data_date, output, dialect='standard'):
 
+        sql = sql_template.format(start_date=data_date, end_date=data_date,
+                                  resourceid=resourceid[resource_name])
         try:
             df = read_gbq(
-                sql.format(start_date=data_date, end_date=data_date,
-                           resourceid=resourceid[resource_name]),
+                sql,
                 private_key=self.private_key,
                 project_id=self.projectid,
                 configuration=self.configuration,
                 dialect=dialect
             )
 
-            df.to_csv(output, index=False)
+            if df.shape[0] == 0:
+                default_logger.warning(f'No record (project_id: {self.projectid}, resource: {resourceid[resource_name]})'
+                                       f'{sql}') 
+            else:
+                df.to_csv(output, index=False)
+            
             return df.shape[0]
         except Exception as e:
             default_logger.info(e)
