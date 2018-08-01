@@ -104,9 +104,10 @@ class GA:
             )
 
             if df.shape[0] == 0:
-                default_logger.warning(f'No record (project_id: {self.projectid}, resource: {resourceid[resource_name]})'
+                default_logger.warning(f'No record (project_id: {self.projectid}, resource: {resourceid[resource_name]})\n'
                                        f'{sql}') 
             else:
+                default_logger.info(f'File saved ({df.shape[0]} records)')
                 df.to_csv(output, index=False)
             
             return df.shape[0]
