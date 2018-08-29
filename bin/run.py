@@ -18,20 +18,23 @@ from pathlib import Path
 
 
 def parse_args(argv: List[str]) -> argparse.Namespace:
-    
+
     YESTERDAY = (datetime.today().date() + timedelta(-1)).strftime('%Y%m%d')
-    
+
     parser = argparse.ArgumentParser('ga_data_fetch')
     parser.add_argument('config', help='config file')
     parser.add_argument('-s', '--start-date', dest='start_date', default=YESTERDAY)
     parser.add_argument('-e', '--end-date', dest='end_date', default=YESTERDAY)
+    parser.add_argument('-r', '--resource',
+                        choices=['website', 'cardaily', 'mobilebank', 'loanrwd', 'mkp', 'all'],
+                        default='all')
 
     args = parser.parse_args(argv[1:])
     return args
 
 
 def main(argv: List[str]) -> int:
-    
+
     # Arg parser
     args = parse_args(argv)
 
@@ -50,10 +53,11 @@ def main(argv: List[str]) -> int:
         raise ValueError(f'{args.config} not found for config file.')
     else:
         raise ValueError('Config file required.')
-    
+
     START_DATE = args.start_date  # '20180101'
     END_DATE = args.end_date  # '20180101'
-    
+    RESOURCE = args.resource
+
     # Logging
     log_file = TimedRotatingFileHandler(
         LOG_FILE, when='D', interval=1, backupCount=30)
@@ -65,11 +69,11 @@ def main(argv: List[str]) -> int:
     ga = GA(projectid=PROJECTID, sql_path=SQL_PATH, private_key=PRIVATE_KEY)
 
     # print(ga._sql_list)
-    ga.save_bq_csv(OUTPUT_PATH, START_DATE, END_DATE, 'all')
+    ga.save_bq_csv(OUTPUT_PATH, START_DATE, END_DATE, RESOURCE)
 
     print('-------------------------------------------'
           f'\nDone. (Time elapsed: {datetime.now() - tic})')
-    
+
     return 0
 
 
